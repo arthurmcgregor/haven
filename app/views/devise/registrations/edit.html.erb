@@ -25,42 +25,46 @@
     <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
-    <%= f.password_field :current_password, autocomplete: "current-password" %>
-  </div>
+  <% unless ENV['HAVEN_DISABLE_PASSWORD_LOGIN'].present? %>
+    <div class="field">
+      <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
+      <%= f.password_field :current_password, autocomplete: "current-password" %>
+    </div>
+  <% end %>
 
   <div class="actions">
     <%= f.submit "Update Account" %>
   </div>
 <% end %>
 
-<h3>Change Password</h3>
+<% unless ENV['HAVEN_DISABLE_PASSWORD_LOGIN'].present? %>
+  <h3>Change Password</h3>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+    <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="field">
-    <%= f.label :password %> <br />
-    <% if @minimum_password_length %>
-      <em><%= @minimum_password_length %> characters minimum</em><br/>
-    <% end %>
-    <%= f.password_field :password, autocomplete: "new-password" %>
-  </div>
+    <div class="field">
+      <%= f.label :password %> <br />
+      <% if @minimum_password_length %>
+        <em><%= @minimum_password_length %> characters minimum</em><br/>
+      <% end %>
+      <%= f.password_field :password, autocomplete: "new-password" %>
+    </div>
 
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
+    <div class="field">
+      <%= f.label :password_confirmation %><br />
+      <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
+    </div>
 
-  <div class="field">
-    <%= f.label :current_password %> <i>(we need your current password to change your password)</i><br />
-    <%= f.password_field :current_password, autocomplete: "current-password" %>
-  </div>
+    <div class="field">
+      <%= f.label :current_password %> <i>(we need your current password to change your password)</i><br />
+      <%= f.password_field :current_password, autocomplete: "current-password" %>
+    </div>
 
-  <div class="actions">
-    <%= f.submit "Change Password" %>
-  </div>
+    <div class="actions">
+      <%= f.submit "Change Password" %>
+    </div>
+  <% end %>
 <% end %>
 
 <% if current_user.indie_auth_tokens.size > 0 %>

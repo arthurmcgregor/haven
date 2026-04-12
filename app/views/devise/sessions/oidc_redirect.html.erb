@@ -1,0 +1,8 @@
+<h2>Redirecting to SSO...</h2>
+
+<%= form_tag @oidc_path, method: :post, data: { turbo: false }, id: "oidc-auto-redirect" do %>
+  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+  <noscript><%= submit_tag "Sign in with SSO" %></noscript>
+<% end %>
+
+<script nonce="<%= request.content_security_policy_nonce %>">document.getElementById("oidc-auto-redirect").submit();</script>

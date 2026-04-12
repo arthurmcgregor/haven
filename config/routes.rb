@@ -29,7 +29,8 @@ Rails.application.routes.draw do
   get 'themes', to: 'static#themes'
 
   devise_for :users, :skip => [:registrations],
-             controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
+             controllers: { omniauth_callbacks: 'users/omniauth_callbacks',
+                            sessions: 'users/sessions' }
   as :user do
     get 'users/edit' => 'devise/registrations#edit', :as => 'edit_user_registration'
     put 'users' => 'devise/registrations#update', :as => 'user_registration'
