@@ -21,6 +21,12 @@ services:
       - HAVEN_DB_PASSWORD=supersecretrandomstring
       - HAVEN_USER_EMAIL=changeme@havenweb.org
       - HAVEN_USER_PASS=ChangeMeN0W
+      # OIDC authentication (optional — set HAVEN_OIDC_ISSUER to enable)
+      # - HAVEN_OIDC_ISSUER=https://auth.example.com
+      # - HAVEN_OIDC_CLIENT_ID=haven
+      # - HAVEN_OIDC_CLIENT_SECRET=your-client-secret
+      # - HAVEN_OIDC_REDIRECT_URI=https://haven.example.com/users/auth/openid_connect/callback
+      # - HAVEN_OIDC_SCOPES=openid email profile
 
   postgresql:
     image: postgres:13.2-alpine

@@ -28,7 +28,8 @@ Rails.application.routes.draw do
   get 'markdown', to: 'static#markdown'
   get 'themes', to: 'static#themes'
 
-  devise_for :users, :skip => [:registrations] 
+  devise_for :users, :skip => [:registrations],
+             controllers: { omniauth_callbacks: 'users/omniauth_callbacks' }
   as :user do
     get 'users/edit' => 'devise/registrations#edit', :as => 'edit_user_registration'
     put 'users' => 'devise/registrations#update', :as => 'user_registration'

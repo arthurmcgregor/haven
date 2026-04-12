@@ -25,6 +25,8 @@ gem 'rss', '~> 0.3.1'
 # For Auth
 gem 'devise', '~> 4.9.4'
 gem 'bcrypt', '~> 3.1.22'
+gem 'omniauth_openid_connect', '~> 0.8'
+gem 'omniauth-rails_csrf_protection', '~> 1.0'
 
 # Pagination
 gem 'kaminari', '~> 1.2.1'

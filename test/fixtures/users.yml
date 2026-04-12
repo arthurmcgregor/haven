@@ -24,7 +24,7 @@ lincoln:
   image_password: tRtK_yw1S5_Q5ufbyyUx
   encrypted_password: <%= User.new.send(:password_digest, 'lincolnpass') %>
 
-Jackson: 
+Jackson:
   id: 3
   name: Andrew Jackson
   email: andrew@jackson.com
@@ -33,3 +33,15 @@ Jackson:
   basic_auth_password: hyv96EFFz7
   image_password: vRtK_yw1S5_Q5ufbyyUx
   encrypted_password: <%= User.new.send(:password_digest, 'jacksonpass') %>
+
+oidc_user:
+  id: 4
+  name: OIDC User
+  email: oidc@example.com
+  admin: 0
+  provider: openid_connect
+  uid: oidc-sub-12345
+  basic_auth_username: oidcBasicUsr
+  basic_auth_password: oidcBasicPwd
+  image_password: oidcImagePassword1234
+  encrypted_password: <%= User.new.send(:password_digest, 'notused') %>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_03_11_163322) do
+ActiveRecord::Schema[7.1].define(version: 2026_04_11_030906) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -163,8 +163,11 @@ ActiveRecord::Schema[7.0].define(version: 2025_03_11_163322) do
     t.string "basic_auth_username", null: false
     t.string "basic_auth_password", null: false
     t.string "image_password", null: false
+    t.string "provider"
+    t.string "uid"
     t.index ["basic_auth_username"], name: "index_users_on_basic_auth_username", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true, where: "(provider IS NOT NULL)"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 

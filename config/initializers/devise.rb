@@ -257,9 +257,20 @@ Devise.setup do |config|
   config.sign_out_via = :delete
 
   # ==> OmniAuth
-  # Add a new OmniAuth provider. Check the wiki for more information on setting
-  # up on your models and hooks.
-  # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
+  # OIDC authentication (opt-in via HAVEN_OIDC_ISSUER env var)
+  if ENV['HAVEN_OIDC_ISSUER'].present?
+    config.omniauth :openid_connect,
+      name: :openid_connect,
+      scope: ENV.fetch('HAVEN_OIDC_SCOPES', 'openid email profile').split(' ').map(&:to_sym),
+      response_type: :code,
+      issuer: ENV['HAVEN_OIDC_ISSUER'],
+      discovery: true,
+      client_options: {
+        identifier: ENV['HAVEN_OIDC_CLIENT_ID'],
+        secret: ENV['HAVEN_OIDC_CLIENT_SECRET'],
+        redirect_uri: ENV['HAVEN_OIDC_REDIRECT_URI']
+      }
+  end
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
