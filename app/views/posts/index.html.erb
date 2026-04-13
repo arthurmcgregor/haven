@@ -1,7 +1,7 @@
 <% if current_user.admin >= 1 %>
 <p><%= link_to raw("<button type=\"button\" id=\"New Post Button\">New Post</button>"), new_post_path %>
 <% end %>
-<hr> 
+<hr>
 
 <% if @posts.empty? %>
   <p>Nobody has written anything yet.</p>
@@ -18,8 +18,35 @@
   <%= paginate @posts %>
 <% end %>
 
+<div class="post-cards">
 <% @posts.each do |post| %>
-  <%= render "posts", post: post, show_page: false %>
-  <hr>
+  <article class="post-card">
+    <% if post.first_image_url %>
+      <div class="post-card-thumbnail">
+        <%= link_to post_path(post) do %>
+          <img src="<%= post.first_image_url %>" alt="" loading="lazy">
+        <% end %>
+      </div>
+    <% end %>
+    <div class="post-card-body">
+      <h2 class="post-card-title">
+        <%= link_to post.display_title, post_path(post) %>
+      </h2>
+      <p class="post-card-excerpt"><%= post.excerpt %></p>
+      <div class="post-card-meta">
+        <time datetime="<%= post.datetime.iso8601 %>"><%= post.datetime.strftime('%B %d, %Y') %></time>
+        <% if @settings.byline %>
+          <span class="post-card-author"> &mdash; <%= post.author.name %></span>
+        <% end %>
+      </div>
+      <% if current_user.admin == 1 || (current_user.admin == 2 and post.author == current_user) %>
+        <div class="post-card-actions">
+          <%= link_to 'Edit', edit_post_path(post) %>
+          <%= link_to 'Delete', post_path(post), method: :delete, data: { confirm: 'Are you sure?' } %>
+        </div>
+      <% end %>
+    </div>
+  </article>
 <% end %>
+</div>
 <%= paginate @posts %>

@@ -1,1 +1,6 @@
-<%= render "posts", post: @post, show_page: true  %>
+<%= render "posts", post: @post, show_page: true %>
+
+<nav class="post-navigation">
+  <%= render "post_nav_link", post: @older_post, direction: "&larr; Older", css_class: "post-nav-older" if @older_post %>
+  <%= render "post_nav_link", post: @newer_post, direction: "Newer &rarr;", css_class: "post-nav-newer" if @newer_post %>
+</nav>

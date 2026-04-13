@@ -56,3 +56,117 @@ details.recent_activity summary h2:before {
 span.reaction_age {
   font-size: small;
 }
+
+/* Post Cards */
+.post-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.post-card {
+  border: 1px solid var(--nc-bg-3);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--nc-bg-2);
+}
+
+.post-card-thumbnail {
+  max-height: 200px;
+  overflow: hidden;
+}
+
+.post-card-thumbnail img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.post-card-body {
+  padding: 1rem;
+}
+
+.post-card-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.3rem;
+  padding-top: 0;
+}
+
+.post-card-title a {
+  text-decoration: none;
+}
+
+.post-card-excerpt {
+  color: var(--nc-tx-2);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.5;
+}
+
+.post-card-meta {
+  font-size: 0.85rem;
+  color: var(--nc-tx-2);
+}
+
+.post-card-actions {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+}
+
+/* Post Heading (show page) */
+.post-heading {
+  margin-bottom: 0.25rem;
+}
+
+.post-heading a {
+  text-decoration: none;
+  color: var(--nc-tx-1);
+}
+
+.post-date-sub {
+  font-size: smaller;
+  color: var(--nc-tx-2);
+  margin-bottom: 0.5rem;
+}
+
+/* Post Navigation */
+.post-navigation {
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem 0;
+  padding: 1rem 0;
+  border-top: 1px solid var(--nc-bg-3);
+  gap: 1rem;
+}
+
+.post-nav-older,
+.post-nav-newer {
+  flex: 1;
+}
+
+.post-nav-newer {
+  text-align: right;
+}
+
+.post-nav-direction {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--nc-tx-2);
+}
+
+.post-nav-title {
+  display: block;
+  font-weight: 500;
+}
+
+@media screen and (max-width: 600px) {
+  .post-card-thumbnail img {
+    height: 150px;
+  }
+  .post-navigation {
+    flex-direction: column;
+  }
+  .post-nav-newer {
+    text-align: left;
+  }
+}

@@ -1,0 +1,6 @@
+<div class="<%= css_class %>">
+  <%= link_to post_path(post) do %>
+    <span class="post-nav-direction"><%= raw direction %></span>
+    <span class="post-nav-title"><%= post.display_title %></span>
+  <% end %>
+</div>

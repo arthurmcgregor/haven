@@ -5,9 +5,9 @@
 <% @recent_comments_and_likes.each do |reaction| %>
 <p>
   <% if reaction.is_a? Like %>
-    <%= reaction.reaction %> from <%= reaction.user.display_name %> on <%= link_to PostsController.make_slug(reaction.post.content).titleize, reaction.post %>
+    <%= reaction.reaction %> from <%= reaction.user.display_name %> on <%= link_to reaction.post.display_title, reaction.post %>
   <% elsif reaction.is_a? Comment %>
-    <%= reaction.author.display_name %> commented on <%= link_to PostsController.make_slug(reaction.post.content).titleize, reaction.post %>
+    <%= reaction.author.display_name %> commented on <%= link_to reaction.post.display_title, reaction.post %>
   <% end %>
 <span class="reaction_age"><%= time_ago_in_words(reaction.created_at) %> ago</span></p>
 <% end %>

@@ -53,6 +53,11 @@ class MicropubController < ApplicationController
               new_content = new_content.first if new_content.is_a? Array
               post.update(content: new_content)
             end
+            if params[:replace][:name]
+              new_name = params[:replace][:name]
+              new_name = new_name.first if new_name.is_a? Array
+              post.update(title: new_name)
+            end
             if params[:replace][:published]
               new_published = Datetime.parse(params[:replace][:published].first)
               post.update(datetime: new_published)
@@ -162,13 +167,12 @@ class MicropubController < ApplicationController
       raise JsonError.new("invalid_request","Only h-entry types supported by this server",400)
     end
     content = ""
+    title = nil
     if params[:content]
       content = params[:content]
-      if params[:name]
-        content = "# #{params[:name]}\n\n#{content}"
-      end
+      title = params[:name] if params[:name]
     elsif params[:name]
-      content = "# #{params[:name]}"
+      title = params[:name]
     else
       raise JsonError.new("invalid_request","New h-entry must have content or a name (or both)",400)
     end
@@ -177,19 +181,22 @@ class MicropubController < ApplicationController
       datetime = DateTime.parse(params[:published])
     end
     post = Post.new
+    post.title = title
     post.datetime = datetime
     post.content = content
-    return post  
+    return post
   end
 
   def post_to_mf2(post)
+    props = {
+      content: [ post.content ],
+      published: [ post.datetime.iso8601 ],
+      url: [ url_for(post) ]
+    }
+    props[:name] = [ post.title ] if post.title.present?
     {
       type: [ "h-entry" ],
-      properties: {
-        content: [ post.content ],
-        published: [ post.datetime.iso8601 ],
-        url: [ url_for(post) ]
-      }
+      properties: props
     }
   end
 end

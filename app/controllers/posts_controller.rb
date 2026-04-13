@@ -42,6 +42,8 @@ class PostsController < ApplicationController
 
   def show
     @post = Post.find(params[:id])
+    @older_post = Post.older_than(@post).first
+    @newer_post = Post.newer_than(@post).first
     @settings = SettingsController.get_setting
     @css = true
   end
@@ -239,6 +241,7 @@ class PostsController < ApplicationController
     date = params[:post][:date]
     time = params[:post][:time]
     post.datetime = DateTime.parse("#{date} #{time}")
+    post.title = params[:post][:title]
     post.content = params[:post][:content]
     post.author = current_user unless !!post.author
     post

@@ -1,4 +1,9 @@
-<%= link_to post.datetime.strftime('%B %d, %Y'), post_path(post), :class => "post-date" %>
+<% if post.title.present? %>
+  <h2 class="post-heading"><%= link_to post.title, post_path(post) %></h2>
+  <div class="post-date-sub"><%= link_to post.datetime.strftime('%B %d, %Y'), post_path(post), class: "post-date" %></div>
+<% else %>
+  <%= link_to post.datetime.strftime('%B %d, %Y'), post_path(post), :class => "post-date" %>
+<% end %>
 
 <% if current_user.admin == 1 || (current_user.admin == 2 and post.author == current_user) %>
 <span style="float: right;">

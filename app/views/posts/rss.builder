@@ -28,7 +28,7 @@ xml.rss :version => "2.0" do
         rss_content += "\n<a href=\"#{post_url(post)}\">Add a comment</a>"
       end
       xml.item do
-        xml.title PostsController.make_title(post.content)
+        xml.title post.display_title
         xml.description PostsController.convert_urls(rss_content.html_safe, request.base_url)
         xml.pubDate post.datetime.rfc822
         xml.link post_url(post)

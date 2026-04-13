@@ -2,6 +2,7 @@
 <%= form_with model: @post, local: true do |form| %>
   <%= form.date_field :date, :style => 'display:inline;', :value => @post.datetime.strftime("%Y-%m-%d"), type: (@show_date ? :date : :hidden) %>
   <%= form.time_field :time, :style => 'display:inline;', :value => @post.datetime.strftime("%H:%M"), type: (@show_date ? :time : :hidden) %>
+  <%= form.text_field :title, placeholder: "Post title", style: 'display:block;width:100%;font-size:1.2em;', value: @post.title, oninput: "doRender()" %>
   <%= form.text_area :content, :rows => 10, :dir => "auto", :style => 'display:block;width:100%;', :oninput => "doRender()", :value => @post.content %>
   <%= form.file_field :pic, :accept => "image/*,.mp4,.mov,.hevc,.mp3", :style => "display:inline;" %>
   <%= form.submit :value => "Upload Selected Image", data: {disable_with: "Upload Selected Image"}, :style => "display:inline;" %>
@@ -20,8 +21,11 @@
 function doRender() {
   var converter = new showdown.Converter();
   converter.setFlavor('github');
+  var title     = document.getElementById("post_title").value;
   var text      = document.getElementById("post_content").value;
-  var html      = converter.makeHtml(text);
+  var html      = '';
+  if (title.trim() !== '') { html += '<h1>' + title + '</h1>'; }
+  html += converter.makeHtml(text);
   document.getElementById("display").innerHTML = html;
 }
 doRender();

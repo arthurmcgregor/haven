@@ -12,7 +12,9 @@ class EditingPostsTest < ApplicationSystemTestCase
     [test_users[:washington], test_users[:jackson]].each do |test_user|
       log_in_with test_user
       click_on "New Post Button"
+      t = "Title #{rand}"
       m = "#{rand} I cannot tell a lie!"
+      fill_in "post_title", with: t
       fill_in "post_content", with: m
       click_on "Save Post"
       assert_text m # page previw shows post content
@@ -29,7 +31,9 @@ class EditingPostsTest < ApplicationSystemTestCase
   test "admin editing a post doesn't change ownership of the post" do
     log_in_with test_users[:jackson] #publisher
     click_on "New Post Button"
+    t = "Title #{rand}"
     m = "#{rand} I cannot tell a lie"
+    fill_in "post_title", with: t
     fill_in "post_content", with: m
     click_on "Save Post"
     assert_text m # page previw shows post content
@@ -63,7 +67,9 @@ class EditingPostsTest < ApplicationSystemTestCase
     assert_no_selector 'input[id="post_date"][type="date"]'
     assert_no_selector 'input[id="post_time"][type="time"]'
 
+    t = "Title #{rand}"
     m = "#{rand} I cannot tell a lie"
+    fill_in "post_title", with: t
     fill_in "post_content", with: m
     click_on "Save Post"
     assert_text m # page previw shows post content
