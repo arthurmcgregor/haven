@@ -1,48 +1,25 @@
+<% content_for :head do %>
+  <%= stylesheet_link_tag "editor", media: "all" %>
+  <%= javascript_include_tag "editor", type: "module" %>
+<% end %>
+
 <hr>
 <%= form_with model: @post, local: true do |form| %>
-  <%= form.date_field :date, :style => 'display:inline;', :value => @post.datetime.strftime("%Y-%m-%d"), type: (@show_date ? :date : :hidden) %>
-  <%= form.time_field :time, :style => 'display:inline;', :value => @post.datetime.strftime("%H:%M"), type: (@show_date ? :time : :hidden) %>
-  <%= form.text_field :title, placeholder: "Post title", style: 'display:block;width:100%;font-size:1.2em;', value: @post.title, oninput: "doRender()" %>
-  <%= form.text_area :content, :rows => 10, :dir => "auto", :style => 'display:block;width:100%;', :oninput => "doRender()", :value => @post.content %>
-  <%= form.file_field :pic, :accept => "image/*,.mp4,.mov,.hevc,.mp3", :style => "display:inline;" %>
-  <%= form.submit :value => "Upload Selected Image", data: {disable_with: "Upload Selected Image"}, :style => "display:inline;" %>
-  <%= form.submit :value => "Save Post", :style => "display:block;" %>
+  <%= form.date_field :date, style: 'display:inline;', value: @post.datetime.strftime("%Y-%m-%d"), type: (@show_date ? :date : :hidden) %>
+  <%= form.time_field :time, style: 'display:inline;', value: @post.datetime.strftime("%H:%M"), type: (@show_date ? :time : :hidden) %>
+  <%= form.text_field :title, placeholder: "Post title", style: 'display:block;width:100%;font-size:1.2em;', value: @post.title %>
+
+  <%# Hidden textarea is the source of truth for submission; Milkdown mirrors markdown into it. %>
+  <%= form.text_area :content, style: 'display:none;', value: @post.content %>
+
+  <div data-milkdown class="milkdown-editor"></div>
+
+  <div style="margin-top:0.5em;">
+    <input type="file" id="media-attach" accept="image/*,.mp4,.mov,.hevc,.mp3" style="display:inline;">
+    <button type="button" id="media-upload-btn" style="display:inline;">Attach Media</button>
+  </div>
+
+  <%= form.submit value: "Save Post", style: "display:block;" %>
 <% end %>
 
-<%= link_to "Markdown", "/markdown", target: "_blank" %> Preview:
-<hr>
-
-
-<div id="display" dir="auto">
-</div>
-
-<%= javascript_tag nonce: true, type: 'application/javascript' do %>
-
-function doRender() {
-  var converter = new showdown.Converter();
-  converter.setFlavor('github');
-  var title     = document.getElementById("post_title").value;
-  var text      = document.getElementById("post_content").value;
-  var html      = '';
-  if (title.trim() !== '') { html += '<h1>' + title + '</h1>'; }
-  html += converter.makeHtml(text);
-  document.getElementById("display").innerHTML = html;
-}
-doRender();
-
-function setTime() {
-  var today = new Date();
-  var dd = String(today.getDate()).padStart(2, '0');
-  var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-  var yyyy = today.getFullYear().toString();
-  var dateString = yyyy + "-" + mm + "-" + dd;
-  var hh = String(today.getHours()).padStart(2, '0');
-  var mm = String(today.getMinutes()).padStart(2, '0');
-  var timeString = hh + ":" + mm;
-  document.getElementById("post_date").value = dateString;
-  document.getElementById("post_time").value = timeString;
-}
-if (document.getElementById("post_content").value.trim()=="") {
-  setTime();
-}
-<% end %>
+<%= link_to "Markdown", "/markdown", target: "_blank" %>

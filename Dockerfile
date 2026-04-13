@@ -31,7 +31,11 @@ RUN chmod 0644 /etc/cron.d/feed-fetch-cron
 RUN crontab /etc/cron.d/feed-fetch-cron
 RUN touch /var/log/cron.log
 
+ADD package.json yarn.lock .yarnrc.yml ./
+RUN corepack enable && yarn install --immutable
+
 ADD . .
+RUN yarn build
 RUN bin/rails assets:precompile
 
 EXPOSE 3000

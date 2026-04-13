@@ -50,6 +50,18 @@ jobs:
       with:
         bundler-cache: true
 
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'yarn'
+
+    - name: Install JS dependencies and build
+      run: |
+        corepack enable
+        yarn install --immutable
+        yarn build
+
     - name: Install PostgreSQL client
       run: |
         sudo apt-get -yqq install libpq-dev

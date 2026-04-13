@@ -30,7 +30,7 @@ class ActionsTest < ApplicationSystemTestCase
       log_in_with test_user
       click_on "New Post Button"
       m = "#{rand} I cannot tell a lie!"
-      fill_in "post_content", with: m
+      fill_in_editor m
       click_on "Save Post"
       assert_text m # page previw shows post content
       click_on "Home"

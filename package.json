@@ -1,5 +1,15 @@
 {
   "name": "blog",
   "private": true,
-  "dependencies": {}
+  "scripts": {
+    "build": "esbuild app/javascript/application.js app/javascript/editor.js --bundle --sourcemap --minify --format=esm --outdir=app/assets/builds --public-path=/assets"
+  },
+  "dependencies": {
+    "@milkdown/kit": "^7.20.0",
+    "@milkdown/theme-nord": "^7.20.0",
+    "@rails/ujs": "7.1.3-4"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0"
+  }
 }

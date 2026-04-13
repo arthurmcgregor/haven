@@ -1,0 +1,65 @@
+/* Default (Desktop) Styles */
+.hamburger-label {
+  display: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  padding-right: 1rem;
+  color: var(--nc-tx-1);
+}
+
+.nav-links {
+  display: inline;
+}
+
+/* Mobile Styles */
+@media screen and (max-width: 768px) {
+  .hamburger-label {
+    display: inline-block;
+    float: right;
+    cursor: pointer;
+    font-size: 1.8rem;
+    padding-right: 0;
+    position: relative;
+    width: 1.8rem;
+    height: 1.8rem;
+    text-align: center;
+    color: var(--nc-tx-1);
+
+    &::before {
+      content: '\2630'; /* ☰ */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  #hamburger-toggle:checked ~ nav header .hamburger-label::before {
+    content: '\00d7'; /* × */
+  }
+
+  .nav-links {
+    display: none;
+    width: 100%;
+    clear: both;
+
+    a {
+      display: block;
+      padding: 0.75rem 0;
+      text-align: left;
+      border-bottom: 1px solid var(--nc-bg-3);
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+
+  #hamburger-toggle:checked ~ nav header .nav-links {
+    display: block;
+    margin-top: 1rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--nc-bg-3);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+}

@@ -23,6 +23,10 @@
 
 /node_modules
 /yarn-error.log
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/patches
 
 /public/assets
 .byebug_history
@@ -36,3 +40,6 @@ deploymentscripts/*.conf
 # Local dev overrides
 docker-compose.local.yml
 mise.local.toml
+
+/app/assets/builds/*
+!/app/assets/builds/.keep

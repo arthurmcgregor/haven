@@ -8,18 +8,14 @@ class ContentSecurityPolicyTest < ApplicationSystemTestCase
     lincoln: {email: "abraham@lincoln.com", pass: "lincolnpass"}     # subscriber
   }
 
-  ## This test is also ensuring that the content security policy doesn't prevent
-  ## the Javascript code which generates live previews from entered markdown
-  test "editing a post generates a markdown preview" do
+  ## Ensures CSP doesn't block the Milkdown editor bundle from loading on the
+  ## post form. Historically this test guarded the Showdown inline preview;
+  ## with Milkdown the editor is an external ESM bundle, so we just verify it
+  ## initialises (ProseMirror mounts a .ProseMirror element inside [data-milkdown]).
+  test "editor loads on the post form without CSP violations" do
     log_in_with test_users[:jackson]
     click_on "New Post Button"
-    m = "#{rand} Post Title"
-    fill_in "post_content", with: "# #{m}"
-    # Javascript preview creates <h1> tag with contents of `m`
-    assert_selector "h1", text: m
-    # finish and log out
-    click_on "Save Post"
+    assert_selector "[data-milkdown] .ProseMirror"
     click_on "Logout"
   end
-
 end

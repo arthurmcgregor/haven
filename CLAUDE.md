@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Haven is a privacy-first, self-hosted personal blogging platform built with Ruby on Rails. It includes a built-in RSS reader, IndieWeb protocol support (IndieAuth, Micropub, Microsub), and invite-only user management. No JavaScript frameworks -- plain JS with server-rendered ERB views.
+Haven is a privacy-first, self-hosted personal blogging platform built with Ruby on Rails. It includes a built-in RSS reader, IndieWeb protocol support (IndieAuth, Micropub, Microsub), and invite-only user management. Server-rendered ERB views with plain JS for most interactivity; the post editor uses the Milkdown (ProseMirror-based) WYSIWYG library.
 
 ## Tech Stack
 
@@ -14,17 +14,22 @@ Haven is a privacy-first, self-hosted personal blogging platform built with Ruby
 - Devise (auth) + OmniAuth OpenID Connect
 - CommonMarker (GitHub Flavored Markdown)
 - Active Storage (local disk dev, S3 production)
-- Sass/SCSS via sass-rails, Uglifier for JS
-- No Webpacker/esbuild -- uses Sprockets asset pipeline
+- Sprockets for CSS (plain `.css` stylesheets via `*= require`); jsbundling-rails + esbuild for JS
+- Milkdown v7 (ProseMirror-based WYSIWYG markdown editor) on the post form, loaded as an ESM bundle from `app/javascript/editor.js`
+- Yarn 4 via Corepack for JS deps
 
 ## Common Commands
 
 ```bash
 # Setup
-bin/setup                          # Install deps, create DB, migrate
+bin/setup                          # Install Ruby deps, create DB, migrate
+yarn install                       # Install JS deps (requires Corepack + Yarn 4)
 
 # Development
-bin/rails server                   # Start dev server (port 3000)
+bin/dev                            # Rails server + esbuild watcher (Procfile.dev)
+bin/rails server                   # Rails server only
+yarn build                         # One-shot JS build to app/assets/builds/
+yarn build --watch                 # Watch mode (if not using bin/dev)
 bin/rails db:migrate               # Run migrations
 bin/rails db:setup                 # Create + migrate + seed
 
@@ -65,6 +70,10 @@ The app implements three IndieWeb specs:
 
 Posts use CommonMarker with GFM extensions for markdown rendering. Slugs are generated from content in `PostsController.make_slug()`. Images go through Active Storage with optional resizing via `image_processing` gem.
 
+### Post Editor
+
+The editor is Milkdown (ProseMirror). Source at `app/javascript/editor.js`, entry for the esbuild bundle. It mounts on `<div data-milkdown>` and mirrors markdown into a hidden `#post_content` textarea, which is still the form's submitted field. Image drag/drop/paste goes through the upload plugin to `POST /uploads` (`UploadsController`), which shares logic with `PostsController` via `app/controllers/concerns/media_processing.rb`. A small "Attach Media" button handles video/audio uploads through the same endpoint.
+
 ### Custom CSS System
 
 Users can add custom CSS (validated via Sass) and upload fonts. Served at `/css/:hash/style.css` with cache-busting hash. The `css_parser` gem is pinned to 1.21.1 due to private method usage.
@@ -85,7 +94,7 @@ Users can add custom CSS (validated via Sass) and upload fonts. Served at `/css/
 
 ## CI
 
-GitHub Actions (`.github/workflows/tests.yml`): runs on PRs and pushes to master. PostgreSQL 13.2 service, ChromeDriver for system tests. Runs `bin/rails test`, `test:system`, and `test:integration` sequentially. Failed system test screenshots uploaded as artifacts.
+GitHub Actions (`.github/workflows/tests.yml`): runs on PRs and pushes to master. PostgreSQL 13.2 service, Node 20 + Yarn (Corepack) for the JS build, ChromeDriver for system tests. Runs `yarn install && yarn build` before `bin/rails test`, `test:system`, and `test:integration`. Failed system test screenshots uploaded as artifacts.
 
 ## Deployment
 

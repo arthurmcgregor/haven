@@ -1,0 +1,8 @@
+/*
+ * This is a manifest file that'll be compiled into application.css.
+ *
+ *= require misc
+ *= require alert
+ *= require new
+ *= require navigation
+ */

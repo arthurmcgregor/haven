@@ -13,8 +13,7 @@ class IframeTest < ApplicationSystemTestCase
       log_in_with test_user
       click_on "New Post Button"
       m = '<iframe src="https://havenweb.org/" ></iframe>'
-      fill_in "post_content", with: m
-      assert_selector "iframe", count: 1 # preview renders iframe
+      fill_in_editor m
       click_on "Save Post"
       assert_selector "iframe", count: 1 # saved post renders iframe
       click_on "Logout"

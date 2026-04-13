@@ -1,4 +1,6 @@
 class PostsController < ApplicationController
+  include MediaProcessing
+
   GFM_EXT = [:table, :strikethrough, :autolink]
   IMG_REGEX = /!\[.*\]\(.*\)/
   before_action :authenticate_user!, except: :rss
@@ -149,38 +151,7 @@ class PostsController < ApplicationController
       .gsub("=\"/images/","=\"#{prefix}/images/")
   end
 
-  def process_new_video(image) ## Image model used for all media
-    blob_path = image_path(image)
-    "\n\n<video controls><source src=\"#{blob_path}\" type=\"video/mp4\"></video>"
-  end
-
-  def process_new_audio(image) ## Image model used for all media
-    blob_path = image_path(image)
-    "\n\n<audio controls><source src=\"#{blob_path}\" type=\"audio/mpeg\"></audio>"
-  end
-
-
-  ## takes a saved Image object, returns the markdown content to refer to the image
-  def process_new_image(image)
-    blob_path = path_for(image.blob)
-    image_meta = ActiveStorage::Analyzer::ImageAnalyzer::ImageMagick.new(image.blob).metadata
-    if image_meta[:width] > 1600 #resize at lower quality with link
-      return "\n\n<a href=\"#{image_path(image)}\">\n  <img src=\"#{image_resized_path(image)}\"></img>\n</a>"
-    else #simple full image
-      return "\n\n<img src=\"#{image_path(image)}\"></img>"
-    end
-  end
-
-
   private
-
-  def image_path(image)
-    "/images/raw/#{image.id}/#{image.blob.filename.to_s}"
-  end
-
-  def image_resized_path(image)
-    "/images/resized/#{image.id}/#{image.blob.filename.to_s}"
-  end
 
   def verify_can_modify_post(post)
     unless current_user.admin==1 or post.author == current_user
@@ -197,39 +168,8 @@ class PostsController < ApplicationController
 
   def handle_form_submit(params, view)
     @post = post_from_form(params)
-    if params[:commit] == "Upload Selected Image"
-      if !(params[:post][:pic].nil?)
-        begin
-          @image = Image.new
-          @image.blob.attach params[:post][:pic]
-          @image.save
-          file_ext = path_for(@image.blob).split(".").last.downcase
-          if (file_ext == "mp3")
-            @post.content += process_new_audio(@image)
-          elsif ["mp4","mov","hevc"].include? file_ext
-            @post.content += process_new_video(@image)
-          else
-            @post.content += process_new_image(@image)
-          end
-        rescue => e
-          @image.destroy
-          upload_filename = ""
-          begin
-            upload_filename = path_for(@image.blob).split("/").last
-          rescue
-          end
-          Rails.logger.error "Error uploading #{upload_filename}"
-          Rails.logger.error e.backtrace.join("\n") if e.backtrace
-          flash.now[:alert] = "Error uploading #{upload_filename}: #{e}"
-        end
-      else # attachment does not exist
-        flash.now[:alert] = "You did not choose a file to upload"
-      end
-      render view
-    else
-      @post.save
-      redirect_to @post
-    end
+    @post.save
+    redirect_to @post
   end
 
   ## Generates a Post object from form submission content, or initializes a new one
@@ -245,13 +185,6 @@ class PostsController < ApplicationController
     post.content = params[:post][:content]
     post.author = current_user unless !!post.author
     post
-  end
-
-  #assumes url_for() returns "http://some.domain.name/path/to/obj"
-  #removes domain to provide only "/path/to/obj"
-  def path_for(obj)
-    url = url_for(obj)
-    "/#{url.split("/",4)[3]}"
   end
 
   ### Methods for Import

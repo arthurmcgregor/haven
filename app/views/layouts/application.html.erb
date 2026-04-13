@@ -31,7 +31,8 @@
       <link rel="stylesheet" type="text/css" href="/css/<%= @settings.css_hash %>/style.css" />
     <% end %>
     <%= stylesheet_link_tag    'application', media: 'all' %>
-    <%= javascript_include_tag 'application' %>
+    <%= javascript_include_tag 'application', type: "module" %>
+    <%= yield :head %>
 
   </head>
   <body>

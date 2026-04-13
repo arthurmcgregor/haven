@@ -15,7 +15,7 @@ class EditingPostsTest < ApplicationSystemTestCase
       t = "Title #{rand}"
       m = "#{rand} I cannot tell a lie!"
       fill_in "post_title", with: t
-      fill_in "post_content", with: m
+      fill_in_editor m
       click_on "Save Post"
       assert_text m # page previw shows post content
       click_on "Home"
@@ -34,7 +34,7 @@ class EditingPostsTest < ApplicationSystemTestCase
     t = "Title #{rand}"
     m = "#{rand} I cannot tell a lie"
     fill_in "post_title", with: t
-    fill_in "post_content", with: m
+    fill_in_editor m
     click_on "Save Post"
     assert_text m # page previw shows post content
     post_url = current_url
@@ -44,7 +44,7 @@ class EditingPostsTest < ApplicationSystemTestCase
       visit post_url
       click_on "Edit"
       m2 = "#{rand} what a lie"
-      fill_in "post_content", with: m2
+      fill_in_editor m2
       click_on "Save Post"
       assert_text m2
     click_on "Logout"
@@ -53,7 +53,7 @@ class EditingPostsTest < ApplicationSystemTestCase
       visit post_url
       click_on "Edit"
       m3 = "#{rand} no lies here"
-      fill_in "post_content", with: m3
+      fill_in_editor m3
       click_on "Save Post"
       assert_text m3
     click_on "Logout"
@@ -70,7 +70,7 @@ class EditingPostsTest < ApplicationSystemTestCase
     t = "Title #{rand}"
     m = "#{rand} I cannot tell a lie"
     fill_in "post_title", with: t
-    fill_in "post_content", with: m
+    fill_in_editor m
     click_on "Save Post"
     assert_text m # page previw shows post content
 
@@ -87,7 +87,7 @@ class EditingPostsTest < ApplicationSystemTestCase
     click_on "Edit"
     assert_selector 'input[id="post_date"][type="date"][value="2023-01-02"]'
     assert_selector 'input[id="post_time"][type="time"][value="13:23"]'
- 
+
     click_on "Logout"
   end
 end
