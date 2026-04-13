@@ -7,7 +7,7 @@ RUN apt-get update -yqq && \
         zlib1g-dev libncurses5-dev libffi-dev libgdbm-dev git libgdbm6 libreadline-dev \
 	nginx nodejs dirmngr gnupg apt-transport-https ca-certificates npm imagemagick \
         postgresql postgresql-contrib libpq-dev cron && \
-	npm install --global yarn && \
+	npm install --global corepack && \
         gem update --system && \
         gem update strscan --default && \
  	gem install bundler -v 2.4.12 --no-document
