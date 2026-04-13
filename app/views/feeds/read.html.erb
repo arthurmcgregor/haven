@@ -31,7 +31,14 @@ end
 <% end %>
 
 <% unless @feed.nil? %>
-  <p><strong>Feed Name: </strong><%= link_to sanitize(@feed.name, tags:[], attributes:[]), @feed.feed_entries.first.link %></p>
+  <% first_entry = @feed.feed_entries.first %>
+  <p><strong>Feed Name: </strong>
+    <% if first_entry %>
+      <%= link_to sanitize(@feed.name, tags:[], attributes:[]), first_entry.link %>
+    <% else %>
+      <%= sanitize(@feed.name, tags:[], attributes:[]) %>
+    <% end %>
+  </p>
   <p><strong>Feed URL: </strong><%= @feed.url %>
   <br/>
   <p><%= link_to 'Delete this feed', feed_path(@feed),
