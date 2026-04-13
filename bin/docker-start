@@ -1,9 +1,10 @@
 #!/bin/bash
 
+## db:prepare creates the DB if missing, loads schema, and runs pending migrations.
+## Avoids noisy "Couldn't create database" errors on every restart when the DB already exists.
 set +e ## allow startup to continue if operating in a shared DB without creation permissions
-bin/rails db:create 
+bin/rails db:prepare
 set -e
-bin/rails db:migrate
 bin/rails assets:precompile
 
 bin/rails r ./deploymentscripts/lib/ruby/create_user.rb "$HAVEN_USER_EMAIL" $HAVEN_USER_PASS
