@@ -50,7 +50,7 @@
       <% end %>
     <% end %>
     <%= form_tag("/posts/#{post.id}/comments", method: "post", class: "comments") do %>
-      <%= text_field_tag(:comment_body, nil, {placeholder: "Write a comment..."}) %>
+      <%= text_area_tag(:comment_body, nil, {placeholder: "Write a comment...", rows: 3}) %>
       <%= submit_tag("Post Comment") %>
     <% end %>
   </div>
